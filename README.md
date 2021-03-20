@@ -21,4 +21,4 @@ Or you can simply copy the `dearpygui` package somewhere where Python can find i
 
 ## License
 
-*DearPyGui-examples* is licensed under the [MIT License](https://github.com/morano/DearPyGui-examples/blob/master/LICENSE).
+*DearPyGui-examples* is licensed under the [MIT License](https://github.com/Amorano/dpg-examples/blob/main/LICENSE).
