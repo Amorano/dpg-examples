@@ -1,0 +1,47 @@
+{
+	"sierpinsky": {
+		"name": "Sierpinsky",
+		"axiom": "A",
+		"angle": 60,
+		"rule": {
+			"F": "-A+F+A-",
+			"A": "+F-A-F+"
+		}
+	},
+	"snowflake": {
+		"name": "Snowflake",
+		"axiom": "[N]++[N]++[N]++[N]++[N]",
+		"angle": 36,
+		"rule": {
+			"M": "OA++PA----NA[-OA----MA]++",
+			"N": "+OA--PA[---MA--NA]+",
+			"O": "-MA++NA[+++OA++PA]-",
+			"P": "--OA++++MA[+PA++++NA]--NA"
+		}
+	},
+	"bush": {
+		"name": "Branching Bush",
+		"axiom": "F",
+		"angle": 22.5,
+		"rule": {
+			"F": "FF+[+F-F-F]-[-F+F+F]"
+		}
+	},
+	"grasshopper": {
+		"name": "Quadradic Grasshopper",
+		"axiom": "-YF",
+		"angle": 90,
+		"rule": {
+			"X": "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
+			"Y": "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"
+		}
+	},
+	"pentaplexity": {
+		"name": "Pentaplexity",
+		"axiom": "F++F++F++F++F",
+		"angle": 36,
+		"rule": {
+			"F": "F++F++F|F-F++F"
+		}
+	}
+}
