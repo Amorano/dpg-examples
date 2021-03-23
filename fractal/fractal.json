@@ -1,4 +1,12 @@
 {
+	"ieve": {
+		"name": "Ieve",
+		"axiom": "F++++FF+FFF",
+		"angle": 36,
+		"rule": {
+			"F": "FF+"
+		}
+	},
 	"sierpinsky": {
 		"name": "Sierpinsky",
 		"axiom": "A",

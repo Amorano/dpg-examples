@@ -4,8 +4,7 @@ import math
 import json
 import os.path as path
 from collections import OrderedDict
-import dearpygui.core as core
-import dearpygui.simple as simple
+from dearpygui import core, simple
 # ==============================================================================
 def polar2cart(rho, theta, oldpos):
 	theta = math.radians(theta)
@@ -81,6 +80,9 @@ class Fractal():
 
 class ExampleFractalWindow():
 	def __init__(self):
+		core.set_vsync(False)
+		core.set_style_window_padding(0, 0)
+
 		self.__iteration = 3
 		# load the data blob
 
@@ -94,12 +96,25 @@ class ExampleFractalWindow():
 
 		with simple.window("MainWindow"):
 			with simple.group("Controls"):
-				core.add_input_int("Iteration", width=150, default_value=self.__iteration, callback=self.__cbIterationValue)
-				core.add_input_float("Angle", width=150, default_value=self.__fractal.dAngle, callback=self.__cbAngleValue)
+				core.add_input_int("Iteration", width=120, min_value=2, max_value=40, min_clamped=True, max_clamped=True,
+					default_value=self.__iteration, callback=self.__cbIterationValue)
+				simple.tooltip("Iteration", "How many times to re-run the pattern parser with the previous runs output. Increasing this directly increases computation time.")
+
+				with simple.group("Controls-Angle"):
+					core.add_input_float("Angle", width=120, default_value=self.__fractal.dAngle, callback=self.__cbAngleValue)
+					simple.tooltip("Angle", "Degrees the turtle will turn either positive or negative, when issued such commands.")
+					core.add_same_line()
+					core.add_checkbox("AngleAnimate", default_value=False, label="Animate")
+					core.add_input_float("AngleStep", width=120, default_value=.002, step=0.001, step_fast=0.01)
+					simple.tooltip("AngleStep", "Amount the animator will step through the angle.")
+
+				core.add_input_float("Length", width=120, default_value=self.__fractal.delta, callback=self.__cbDeltaValue)
+				simple.tooltip("Length", "Relative distance, forward or backward, the turtle will take when commanded.")
 			core.add_same_line()
 			core.add_listbox("power", label='', items=self.__fractalKeys, callback=self.__cbFractalType)
 			core.add_drawing("Canvas", width=size[0] * 2, height=size[1] * 2)
 		core.set_resize_callback(self.__resize)
+		core.set_render_callback(self.__render)
 		self.__refresh()
 
 	def __cbFractalType(self, sender, data):
@@ -113,7 +128,6 @@ class ExampleFractalWindow():
 		iteration = core.get_value(sender)
 		if iteration == self.__iteration:
 			return
-		iteration = max(2, min(iteration, 10))
 		core.set_value(sender, iteration)
 		self.__iteration = iteration
 		self.__refresh()
@@ -122,7 +136,13 @@ class ExampleFractalWindow():
 		angle = core.get_value(sender) % 360
 		core.set_value(sender, angle)
 		self.__fractal.dAngle = angle
-		self.__refresh()
+		self.__refresh(False)
+
+	def __cbDeltaValue(self, sender, data):
+		delta = max(min(20, core.get_value(sender)), .1)
+		core.set_value(sender, delta)
+		self.__fractal.delta = delta
+		self.__refresh(False)
 
 	def __cbFractalDraw(self, pointArray: list):
 		color = [255, 255, 255, 255]
@@ -133,16 +153,23 @@ class ExampleFractalWindow():
 		core.draw_polyline("Canvas", points, color, thickness=thickness)
 
 	def __resize(self):
-		self.__refresh()
+		self.__refresh(False)
 
-	def __refresh(self):
+	def __refresh(self, full=True):
 		core.clear_drawing("Canvas")
-		self.__fractal.delta = 20 - 8 * math.log(self.__iteration)
-		self.__fractal.parse(iteration=self.__iteration)
+		if full:
+			self.__fractal.parse(iteration=self.__iteration)
 		self.__fractal.execute(drawCallback=self.__cbFractalDraw, drawCallBufferSize=500)
+
+	def __render(self):
+		# check if something is set to "animate"
+		x = core.get_value("AngleAnimate")
+		if not core.get_value("AngleAnimate"):
+			return
+		step = core.get_value("AngleStep")
+		self.__fractal.dAngle += step
+		self.__refresh(False)
 # ==============================================================================
 if __name__ == "__main__":
-	core.set_vsync(False)
-	core.set_style_window_padding(0, 0)
 	ExampleFractalWindow()
 	core.start_dearpygui(primary_window="MainWindow")
