@@ -110,9 +110,12 @@ class ExampleMediaplayer():
 	def __scanDir(self):
 		ret = []
 		for f in listdir(self.__root):
-			f = f"{self.__root}/{f}"
-			if path.isfile(f) and f.lower().endswith('.mp4'):
-				ret.append(f)
+			full = f"{self.__root}/{f}"
+			if path.isfile(full):
+				for x in ['.mp4', '.avi']:
+					if f.lower().endswith(x):
+						ret.append(f)
+						break
 
 		core.configure_item("Listing", items=ret)
 		if len(ret) > 0:
@@ -122,16 +125,20 @@ class ExampleMediaplayer():
 		core.clear_drawing("Canvas")
 		self.__play(0)
 		self.__head = 0
-		probe = ffmpeg.probe(filename)
+		fp = f"{self.__root}/{filename}"
+		probe = ffmpeg.probe(fp)
 		video_info = next(stream for stream in probe['streams'] if stream['codec_type'] == 'video')
 		self.__width = int(video_info['width'])
 		self.__height = int(video_info['height'])
 		self.__frameCount = int(video_info['nb_frames'])
 
+		global _BUFFER
+		_BUFFER = [[0, 0, 0, 0] * self.__width * self.__height] * self.__frameCount
+
 		# kill the old if there...
 		if self.__thread:
-			self.__thread.join()
-		self.__thread = process(filename, self.__width, self.__height)
+			self.__thread._stop()
+		self.__thread = process(fp, self.__width, self.__height)
 		self.__thread.start()
 
 	def __mouseWheel(self, sender, data):
