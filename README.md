@@ -1,7 +1,7 @@
 # DearPyGUI-Examples
 A growing set of example applets that draw support using the [Dear PyGUI](https://github.com/hoffstadt/DearPyGui) API, a Python GUI framework built upon the [Dear ImGui](https://github.com/ocornut/imgui) library in C++.
 
-The goal is to make all examples self-contained in pure python. They should also be fully compatible with the latest releases of the *Dear PyGUI* API.
+The goal is to make all examples self-contained, as pure python as possible. They should also be fully compatible with the latest releases of the *Dear PyGUI* API.
 
 ## Example Usage
 Using the examples is easy. Open an example subfolder and run it's corresponding named .py file.
@@ -11,6 +11,13 @@ Using the examples is easy. Open an example subfolder and run it's corresponding
 **Requirements**
 - Python 3.8 64-bit or greater
 - dearpygui 0.6.x
+
+**MediaPlayer Example Requirements**
+- [ffmpeg](https://ffmpeg.org/)
+- [numpy-1.20.1 or greater](https://numpy.org/)
+- - pip install numpy
+- [ffmepg-python](https://github.com/kkroening/ffmpeg-python)
+- - pip install ffmpeg-python
 
 You can install *Dear PyGUI* from [TestPyPI](https://test.pypi.org/project/dearpygui/):
 ```
