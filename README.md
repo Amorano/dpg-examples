@@ -12,12 +12,23 @@ Using the examples is easy. Open an example subfolder and run it's corresponding
 - Python 3.8 64-bit or greater
 - dearpygui 0.6.x
 
-**MediaPlayer Example Requirements**
 - [ffmpeg](https://ffmpeg.org/)
 - [numpy-1.20.1 or greater](https://numpy.org/)
 - - pip install numpy
-- [ffmepg-python](https://github.com/kkroening/ffmpeg-python)
+- [ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
 - - pip install ffmpeg-python
+
+- [PIL](https://github.com/python-pillow/Pillow)
+- - pip install --upgrade Pillow
+
+**MediaPlayer Example Requirements**
+- ffmpeg
+- numpy
+- ffmpeg-python
+
+**Tilegame Example Requirements**
+- numpy
+- PIL
 
 You can install *Dear PyGUI* from [TestPyPI](https://test.pypi.org/project/dearpygui/):
 ```
