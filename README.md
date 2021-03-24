@@ -10,7 +10,7 @@ Using the examples is easy. Open an example subfolder and run it's corresponding
 
 **Requirements**
 - Python 3.8 64-bit or greater
-- dearpygui 0.6.x
+- [dearpygui 0.6.x](https://github.com/hoffstadt/DearPyGui)
 
 - [ffmpeg](https://ffmpeg.org/)
 - [numpy-1.20.1 or greater](https://numpy.org/)
