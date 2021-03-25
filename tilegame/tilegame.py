@@ -87,7 +87,10 @@ class ExampleTileGame():
 		self.__redraw()
 
 	def __redraw(self):
-		core.delete_item("Layout")
+		items = core.get_all_items()
+		if "Layout" in items:
+			core.delete_item("Layout")
+
 		with simple.group("Layout", parent="MainWindow"):
 			for index, i in enumerate(self.__board):
 				core.add_image_button(f"button-{i}", f"image-{i}",
