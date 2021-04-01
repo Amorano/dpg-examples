@@ -1,5 +1,6 @@
 """."""
 
+import time
 from os import path, listdir
 import threading
 import ffmpeg
@@ -33,6 +34,8 @@ class process(threading.Thread):
 
 class ExampleMediaplayer():
 	def __init__(self):
+
+		self.__last = -1
 
 		self.__targetFPS = 30
 
@@ -96,7 +99,15 @@ class ExampleMediaplayer():
 
 		core.set_render_callback(self.__render)
 		core.set_mouse_wheel_callback(self.__mouseWheel)
+		core.set_exit_callback(self.__close)
 		self.__scanDir()
+
+	def __close(self):
+		if self.__thread:
+			while self.__thread.is_alive():
+				self.__thread.join()
+				time.sleep(0.1)
+		core.stop_dearpygui()
 
 	def __itemChange(self, sender, data):
 		idx = core.get_value(sender)
@@ -178,7 +189,11 @@ class ExampleMediaplayer():
 				self.__play(0)
 				return
 
+
 		idx = int(self.__head)
+		if self.__last == idx:
+			return
+		self.__last = idx
 		frame = _BUFFER[idx]
 		core.add_texture("temp", frame, self.__width, self.__height)
 		core.draw_image("Canvas", "temp", [0, 0], pmax=[self.__width, self.__height])
