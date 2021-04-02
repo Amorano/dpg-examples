@@ -1,8 +1,6 @@
 """."""
-
 import math
 from time import perf_counter
-from dearpygui import core, simple
 
 def lerp(a, b, dist):
 	if b > a:
@@ -30,6 +28,9 @@ class Timeline():
 		# since last frame (always caculated, even when stopped)
 		self.__delta = perf_counter()
 
+		# everyone registered to get a callback...
+		self.__callback = None
+
 	def loop(self):
 		"""Toggle looping."""
 		self.__loop = not self.__loop
@@ -50,6 +51,10 @@ class Timeline():
 			keys = [k for k in v.keys()]
 			top = max(top, keys[-1])
 		self.__duration = max(top, value)
+
+	def callback(self, who):
+		self.__callback = self.__callback or []
+		self.__callback.append(who)
 
 	def keyEdit(self, target: str, attr: str, timeIndex: float, value):
 		"""."""
@@ -108,6 +113,9 @@ class Timeline():
 				self.stop()
 				return
 
+		if self.__callback is None:
+			return
+
 		# if we are here, we are playing back something?
 		# iterating this whole block feels bad... callbacks...?
 		for source, data in self.__items.items():
@@ -142,64 +150,6 @@ class Timeline():
 					value = [lerp(v1[i], v2[i], delta) for i in range(len(v1))]
 			if singleVal:
 				value = value[0]
-			core.configure_item(widget, **{f'{attr}': value})
-			print(t1, t2, self.__head, delta, value)
-			# print(t1, t2, self.__head, delta)
 
-_TIMELINE = Timeline()
-_FPS = 0
-
-def render(sender, data):
-	_TIMELINE.render()
-	_FPS = 1. / core.get_delta_time()
-	core.set_value('ShuttleFPS', int(_FPS))
-	core.set_value('MediabarIndex', _TIMELINE.index)
-
-def cbSeek(sender, data):
-	# get the time index of sender, and set the _TIMELINE.seek()
-	print(sender, data)
-	_TIMELINE.seek(data)
-
-def unittest():
-	core.set_style_item_spacing(1, 1)
-	cmds = {
-		'<<': lambda: _TIMELINE.seek(0),
-		'<-': lambda: _TIMELINE.play(-1),
-		'||': _TIMELINE.stop,
-		'->': lambda: _TIMELINE.play(1),
-		'>>': lambda: _TIMELINE.seek(-1),
-		'@@': lambda: _TIMELINE.loop()
-	}
-
-	_width = 60
-	_size = len(cmds.keys()) * _width
-
-	with simple.window("Window"):
-		with simple.group("MediaBar"):
-			with simple.group("Shuttle"):
-				for k, v in cmds.items():
-					core.add_button(f"Shuttle#{k}", label=k, width=_width, height=25, callback=v)
-					core.add_same_line()
-				core.add_text("ShuttleFPS")
-			core.add_drag_float("MediabarIndex", label="", width=_size, callback=cbSeek)
-
-		core.add_color_button("TEST BUTTON", [255, 255, 255], width=400, height=400)
-
-	colors = [
-		(0, [255, 0, 0, 255]),
-		(.2, [196, 32, 0, 255]),
-		(.4, [128, 64, 32, 255]),
-		(.6, [196, 128, 64, 255]),
-		(.8, [255, 255, 255, 255]),
-	]
-
-	_TIMELINE.keyEdit("TEST BUTTON", 'width', 0, 400)
-	_TIMELINE.keyEdit("TEST BUTTON", 'width', 2, 100)
-	_TIMELINE.keyEdit("TEST BUTTON", 'width', 3.75, 400)
-
-	core.set_render_callback(render)
-	core.start_dearpygui(primary_window="Window")
-# ==============================================================================
-if __name__ == "__main__":
-	core.set_vsync(False)
-	unittest()
+			for cmd in self.__callback:
+				cmd(widget, {f'{attr}': value})

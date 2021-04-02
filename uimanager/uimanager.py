@@ -1,17 +1,6 @@
 """."""
-
 import re
 from dearpygui import core, simple
-
-def siblings(parent, recurse=True):
-	if not isinstance(parent, list):
-		parent = [parent]
-	ret = []
-	for p in parent:
-		ret.extend(core.get_item_children(p))
-		if recurse:
-			ret.extend(siblings(p))
-	return ret
 
 class UIManager():
 	def __init__(self):
@@ -56,7 +45,6 @@ class UIManager():
 			typ = [k for k in self.__cache]
 		category = [t for t in typ if t not in exclude and self.__cache.get(t, None)]
 
-
 		# nothing to filter through...
 		if len(category) == 0:
 			return []
@@ -87,6 +75,7 @@ class UIManager():
 
 class ExampleControlFilter():
 	def __init__(self):
+		core.set_main_window_size(1040, 400)
 		core.set_style_item_spacing(1, 1)
 		core.set_global_font_scale(1.8)
 		with simple.window("main", autosize=True):
@@ -100,7 +89,7 @@ class ExampleControlFilter():
 				core.add_input_text("regex", default_value=".*", callback=self.__filter)
 
 		# cache the existing interface...
-		self.__im = InterfaceManager()
+		self.__im = UIManager()
 		self.__filter("regex")
 
 	def __filter(self, sender):
