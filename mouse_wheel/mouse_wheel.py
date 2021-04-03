@@ -1,5 +1,4 @@
-import dearpygui.core as core
-import dearpygui.simple as simple
+from dearpygui import core, simple
 
 class ExampleCallbackMouseWheel():
 	def __init__(self):

@@ -1,12 +1,13 @@
 """."""
 import sys
 from os import path, listdir
+# monkey patched imports...
+t = path.join(path.dirname(__file__), "..")
+sys.path.append(t)
+from support.umath import makeImage
+
 import numpy as np
 from dearpygui import core, simple
-# monkey patched imports...
-t = path.join(path.dirname(__file__), "..", "support")
-sys.path.append(t)
-from support import makeImage
 
 class ExampleTileGame():
 	def __init__(self):
