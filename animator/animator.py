@@ -1,6 +1,8 @@
 """."""
+
 import math
 from time import perf_counter
+from dearpygui import core, simple
 
 def lerp(a, b, dist):
 	if b > a:
@@ -26,7 +28,7 @@ class Timeline():
 		self.__loop = True
 
 		# since last frame (always caculated, even when stopped)
-		self.__delta = perf_counter()
+		self.__delta = core.get_delta_time()
 
 		# everyone registered to get a callback...
 		self.__callback = None
@@ -86,10 +88,11 @@ class Timeline():
 		self.__head = max(0, min(value, self.__duration))
 
 	def render(self):
-		delta = perf_counter() - self.__delta
-		self.__delta = perf_counter()
+		delta = core.get_delta_time()
+
+		print(self.__head, self.__direction, delta)
+
 		# we are stepping through the timeline frames...
-		# print(f'{self.__head} - {self.__direction}  {delta}')
 		if self.__direction == 0:
 			return
 
@@ -152,7 +155,63 @@ class Timeline():
 			if singleVal:
 				value = value[0]
 
-			print(self.__head, self.__direction, value)
+
 
 			for cmd in self.__callback:
 				cmd(widget, {f'{attr}': value})
+
+class ExampleAnimator():
+	def __init__(self):
+		core.set_vsync(False)
+		core.set_style_item_spacing(1, 1)
+
+		self.__timeline = Timeline()
+		self.__timeline.callback(self.__timelineRender)
+		self.__fps = 0
+
+		cmds = {
+			'<<': lambda: self.__timeline.seek(0),
+			'<-': lambda: self.__timeline.play(-1),
+			'||': self.__timeline.stop,
+			'->': lambda: self.__timeline.play(1),
+			'>>': lambda: self.__timeline.seek(-1),
+			'@@': self.__timeline.loop
+		}
+
+		_width = 60
+		_size = len(cmds.keys()) * _width
+
+		with simple.window("main"):
+			with simple.group("MediaBar"):
+				with simple.group("Shuttle"):
+					for k, v in cmds.items():
+						core.add_button(f"Shuttle#{k}", label=k, width=_width, height=25, callback=v)
+						core.add_same_line()
+					core.add_text("ShuttleFPS")
+				core.add_drag_float("MediabarIndex", label="", width=_size, callback=self.__cbSeek)
+
+			core.add_color_button("TEST BUTTON", [255, 255, 255], width=400, height=400)
+
+		self.__timeline.keyEdit("TEST BUTTON", 'width', 0, 400)
+		self.__timeline.keyEdit("TEST BUTTON", 'width', 2., 10)
+		self.__timeline.keyEdit("TEST BUTTON", 'width', 3.75, 400)
+
+		core.set_render_callback(self.__render)
+
+	def __timelineRender(self, widget, data):
+		core.configure_item(widget, **data)
+
+	def __render(self, sender, data):
+		self.__timeline.render()
+		self.__fps = 1. / core.get_delta_time()
+		core.set_value('ShuttleFPS', int(self.__fps))
+		core.set_value('MediabarIndex', self.__timeline.index)
+
+	def __cbSeek(self, sender, data):
+		# get the time index of sender, and set the _TIMELINE.seek()
+		print(sender, data)
+		self.__timeline.seek(data)
+
+if __name__ == "__main__":
+	ExampleAnimator()
+	core.start_dearpygui(primary_window="main")
