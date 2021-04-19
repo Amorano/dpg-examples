@@ -98,7 +98,8 @@ class ExampleFractalWindow():
 			with simple.group("Controls"):
 				core.add_input_int("Iteration", width=120, min_value=2, max_value=40, min_clamped=True, max_clamped=True,
 					default_value=self.__iteration, callback=self.__cbIterationValue)
-				simple.tooltip("Iteration", "How many times to re-run the pattern parser with the previous runs output. Increasing this directly increases computation time.")
+				simple.tooltip("Iteration", "How many times to re-run the pattern parser with the \
+					previous runs output. Increasing this directly increases computation time.")
 
 				with simple.group("Controls-Angle"):
 					core.add_input_float("Angle", width=120, default_value=self.__fractal.dAngle, callback=self.__cbAngleValue)
@@ -163,7 +164,7 @@ class ExampleFractalWindow():
 
 	def __render(self):
 		# check if something is set to "animate"
-		x = core.get_value("AngleAnimate")
+		# x = core.get_value("AngleAnimate")
 		if not core.get_value("AngleAnimate"):
 			return
 		step = core.get_value("AngleStep")

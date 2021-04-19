@@ -1,7 +1,6 @@
 """."""
 
 import math
-from time import perf_counter
 from dearpygui import core, simple
 
 def lerp(a, b, dist):
@@ -154,8 +153,6 @@ class Timeline():
 					value = [lerp(v1[i], v2[i], delta) for i in range(len(v1))]
 			if singleVal:
 				value = value[0]
-
-
 
 			for cmd in self.__callback:
 				cmd(widget, {f'{attr}': value})

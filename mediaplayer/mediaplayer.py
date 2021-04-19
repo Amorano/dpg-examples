@@ -10,7 +10,7 @@ from dearpygui import core, simple
 # to hold the current frames decoded from FFMPEG
 _BUFFER = []
 
-class process(threading.Thread):
+class Process(threading.Thread):
 	def __init__(self, buffer, height, width):
 		threading.Thread.__init__(self)
 		self.__height = height
@@ -18,7 +18,7 @@ class process(threading.Thread):
 		self.__buffer = buffer
 
 	def run(self):
-		out, err = (
+		out, _ = (
 			ffmpeg
 			.input(self.__buffer)
 			.output('pipe:', format='rawvideo', pix_fmt='rgba')
@@ -149,7 +149,7 @@ class ExampleMediaplayer():
 		# kill the old if there...
 		if self.__thread:
 			self.__thread._stop()
-		self.__thread = process(fp, self.__width, self.__height)
+		self.__thread = Process(fp, self.__width, self.__height)
 		self.__thread.start()
 
 	def __mouseWheel(self, sender, data):
@@ -188,7 +188,6 @@ class ExampleMediaplayer():
 				self.__head = self.__frameCount
 				self.__play(0)
 				return
-
 
 		idx = int(self.__head)
 		if self.__last == idx:

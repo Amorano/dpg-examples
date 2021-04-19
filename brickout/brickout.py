@@ -1,3 +1,5 @@
+"""."""
+
 from dearpygui import core, simple
 
 class ExampleBreakoutGame():
@@ -79,10 +81,10 @@ class ExampleBreakoutGame():
 		if key == 68:
 			self.__move(1)
 
-	def __move(self, dir):
+	def __move(self, direction):
 		x, y = self.__paddle
 		delta = core.get_delta_time()
-		x += dir * delta * self.__paddleSpeed
+		x += direction * delta * self.__paddleSpeed
 		# bounds
 		size = core.get_main_window_size()
 		if x < self.__paddleSize[0]:

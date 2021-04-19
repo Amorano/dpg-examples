@@ -30,7 +30,16 @@ class ExampleFonts():
 				core.add_listbox("font", label='', items=_fontnames, num_items=count, width=210, callback=self.__changed)
 			core.add_same_line()
 			with simple.group("text"):
-				core.add_text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in mollis mauris. Donec tempor felis eget libero accumsan sagittis. Integer efficitur urna sed nibh auctor, non hendrerit libero pulvinar. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In hac habitasse platea dictumst. Vestibulum consectetur, sem vitae tristique rhoncus, sem ex maximus ligula, vitae egestas lorem libero nec libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent gravida laoreet pharetra. Ut nec vulputate purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas malesuada neque vel ipsum imperdiet, et lobortis justo sollicitudin.", wrap=560)
+				core.add_text("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
+				Phasellus in mollis mauris. Donec tempor felis eget libero accumsan sagittis.\
+				Integer efficitur urna sed nibh auctor, non hendrerit libero pulvinar.\
+				Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere\
+				cubilia curae; In hac habitasse platea dictumst. Vestibulum consectetur,\
+				sem vitae tristique rhoncus, sem ex maximus ligula, vitae egestas lorem libero\
+				nec libero. Pellentesque habitant morbi tristique senectus et netus et malesuada\
+				fames ac turpis egestas. Praesent gravida laoreet pharetra. Ut nec vulputate purus.\
+				Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos\
+				himenaeos. Maecenas malesuada neque vel ipsum imperdiet, et lobortis justo sollicitudin.", wrap=560)
 		simple.show_style_editor()
 
 	def __changed(self, sender, data):
@@ -38,7 +47,6 @@ class ExampleFonts():
 		val = _fontnames[val]
 		val = _fonts[val]
 		print(val)
-		core.set_item_style_var
 
 if __name__ == "__main__":
 	ExampleFonts()
