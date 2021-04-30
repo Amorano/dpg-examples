@@ -1,4 +1,4 @@
-"""Progress bar with threaded and async response."""
+"""Threaded progress bar widget."""
 
 import random
 from queue import Queue
@@ -24,19 +24,9 @@ class ThreadProgress(Thread):
 		if self.__callback:
 			self.__callback()
 
-async def update(progressBar, q, callback=None):
-	val, overlay = q.get()
-	while val:
-		val, overlay = q.get()
-		core.configure_item(progressBar.guid, overlay=overlay)
-		core.set_value(progressBar.guid, val)
-
-	if callback:
-		callback()
-
 class ProgressBar():
 	_index = 0
-	def __init__(self, parent, guid=None, display=None, callback=None, **kw):
+	def __init__(self, parent, guid=None, callback=None, **kw):
 
 		guid = guid or self.__class__.__name__
 		self.__guid = f'{parent}-{guid}.{ProgressBar._index}'
