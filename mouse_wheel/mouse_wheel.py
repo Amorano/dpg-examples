@@ -22,7 +22,7 @@ class ExampleCallbackMouseWheel():
 		self.__fontSize = max(min(self.__fontSize, max_value), min_value)
 		print(self.__fontSize)
 		core.set_global_font_scale(self.__fontSize)
-# ==============================================================================
+
 if __name__ == "__main__":
 	ExampleCallbackMouseWheel()
 	core.start_dearpygui(primary_window="MainWindow")
